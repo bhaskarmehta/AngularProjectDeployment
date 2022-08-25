@@ -9,5 +9,5 @@ spec:
        - name: mypod
          image: bhasmeht/myimage3
          ports:
-            - containerPort: 8080
+            - containerPort: 80
        
