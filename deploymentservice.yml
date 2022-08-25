@@ -1,0 +1,36 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+   name: mydeployment
+spec:
+   replicas: 1
+   selector:
+       matchLabels:
+          name: deployment
+   template:
+       metadata:
+         name: imagedeployment
+         labels:
+            name: deployment
+       spec:
+          containers:
+             - name: kubernetesimage
+               image: bhasmeht/image3
+               ports:
+                  - containerPort: 80
+                  
+                  
+---
+apiVersion: v1
+kind: Service
+metadata:
+     name: myservice
+spec:
+   selector:
+       name: deployment
+   ports:
+     - protocol: "TCP"
+       port: 80
+       targetPort: 80
+   type: NodePort    
