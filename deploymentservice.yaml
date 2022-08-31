@@ -31,6 +31,6 @@ spec:
        name: deployment
    ports:
      - protocol: "TCP"
-       port: 22
+       port: 80
        targetPort: 80
    type: NodePort    
