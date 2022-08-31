@@ -16,7 +16,7 @@ spec:
        spec:
           containers:
              - name: kubernetesimage
-               image: bhasmeht/mydockerimage2
+               image: bhasmeht/mydockerimage3
                ports:
                   - containerPort: 80
                   
