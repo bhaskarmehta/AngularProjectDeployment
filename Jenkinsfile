@@ -7,7 +7,7 @@ pipeline{
     stages{
         stage('code clone'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/bhaskarmehta/ci-cd-pipeline.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/bhaskarmehta/CI-CD-Pipeline.git']]])
             }
         }
         stage('build image'){
