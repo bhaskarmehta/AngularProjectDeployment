@@ -2,40 +2,43 @@ pipeline{
     agent any
     environment{
         dockerImage=''
-        registry='bhasmeht/image1'
-        registryCredential='dockerhub_id'
+        registry='bhasmeht/angular-image'
     }
     stages{
-        stage('clone repo'){
+        stage('code clone'){
             steps{
-              checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/bhaskarmehta/test2.git']]])  
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/bhaskarmehta/ci-cd-pipeline.git']]])
             }
         }
         stage('build image'){
             steps{
                 script{
-                    dockerImage = docker.build registry
+                    dockerImage=docker.build registry
                 }
             }
         }
-        stage('stop the running container'){
-            steps{
-                sh 'docker stop  mycontainer'
-                sh 'docker rm mycontainer'
-            }
-        }
-        stage('run image'){
+        stage('push image to dockerhub'){
             steps{
                 script{
-                    dockerImage.run("-p 82:80 --name mycontainer")
-                }
-            }
-        }
-        stage('push image to docker hub'){
-            steps{
-                script{
-                    docker.withRegistry('',registryCredential){
+                    docker.withRegistry('','dockerhub_id'){
                         dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Deploy App') {
+            steps{
+                sshagent(['kubernetes_id']) {
+                    
+                    sh "scp  -o StrictHostKeyChecking=no deploymentservice.yaml ubuntu@35.175.190.171:~/"
+                    script{
+                        try{
+                            
+                            sh "ssh ubuntu@35.175.190.171 kubectl apply -f ."
+                        }
+                        catch(error){
+                           sh "ssh ubuntu@35.175.190.171 kubectl create -f ." 
+                        }
                     }
                 }
             }
