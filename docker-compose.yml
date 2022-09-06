@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+        web:
+
+                build: .
+                image: myimage
+                # Here we can use context also and it says the path of Dockerfile
+                # context: .
+                # dockerfile: Dockerfile
+
+                ports:
+                        - "400:80"
+                container_name: mycontainer
