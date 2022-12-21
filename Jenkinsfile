@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment{
         dockerImage=''
-        registry='bhasmeht/angular-image'
+        registry='bhasmeht/image5'
     }
     stages{
         stage('code clone'){
@@ -26,22 +26,21 @@ pipeline{
                 }
             }
         }
-        stage('Deploy App') {
+        stage('Deploy Helm App') {
             steps{
                 sshagent(['kubernetes_id']) {
                     
-                    sh "scp  -o StrictHostKeyChecking=no deploymentservice.yaml ubuntu@35.175.190.171:~/"
+                    sh "scp -r -o StrictHostKeyChecking=no helmdeployment ubuntu@44.203.53.179:~/"
                     script{
-                        try{
-                            
-                            sh "ssh ubuntu@35.175.190.171 kubectl apply -f ."
-                        }
-                        catch(error){
-                           sh "ssh ubuntu@35.175.190.171 kubectl create -f ." 
-                        }
+                        sh 'ssh ubuntu@44.203.53.179 wget https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz'  
+                        sh 'ssh ubuntu@44.203.53.179 tar xvf helm-v3.9.3-linux-amd64.tar.gz'
+                        sh 'ssh ubuntu@44.203.53.179 sudo mv linux-amd64/helm /usr/local/bin'
+                        sh 'ssh ubuntu@44.203.53.179 helm version'
+                        sh "ssh ubuntu@44.203.53.179 helm install myhelm helmdeployment"
                     }
                 }
             }
         }
+      }
     }
 }
